@@ -12,8 +12,11 @@
         <div class="col-6 pt-5">
             <input type="text" id="filtro" class="form-control" placeholder="Filtrar por nombre">
         </div>
-        <div class="col-6">
+        <div class="col-2">
             <button type="button" class="btn btn-primary mt-5" id="buscar">Buscar</button>
+        </div>
+        <div class="col-4">
+            <button type="button" class="btn btn-success mt-5" data-toggle="modal" data-target="#activoCreate">Agregar Activo</button>
         </div>
         <div class="col-12">
             <h1>Activos</h1>
@@ -98,6 +101,39 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="activoCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar Activo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreCreate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripcion</label>
+                            <input type="text" class="form-control" id="descripcionCreate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="stock" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="stockCreate">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="crear">Crear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -190,6 +226,29 @@ window.onload = function(){
         .then(function (response) {
             getActivos();
             $('#modalEditar').modal('hide');
+        })
+        .catch(function (error) {
+            alert(error.response.data.message)
+        });
+    });
+    $('#crear').click(function(){
+        var nombre = document.getElementById('nombreCreate').value;
+        var descripcion = document.getElementById('descripcionCreate').value;
+        var stock = document.getElementById('stockCreate').value;
+
+        if(nombre == '' || descripcion == '' || stock == ''){
+            alert('Todos los campos son requeridos');
+            return false;
+        }
+
+        axios.post('/api/activos', {
+            nombre: nombre,
+            descripcion: descripcion,
+            stock: stock
+        })
+        .then(function (response) {
+            getActivos();
+            $('#activoCreate').modal('hide');
         })
         .catch(function (error) {
             alert(error.response.data.message)
