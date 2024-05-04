@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::get('activos',[ActivoController::class,'index']);
 Route::post('activos',[ActivoController::class,'store']);
+Route::post('darBaja',[ActivoController::class,'darBaja']);
