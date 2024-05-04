@@ -9,6 +9,12 @@
 <body>
 <div class="container">
     <div class="row">
+        <div class="col-6 pt-5">
+            <input type="text" id="filtro" class="form-control" placeholder="Filtrar por nombre">
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-primary mt-5" id="buscar">Buscar</button>
+        </div>
         <div class="col-12">
             <h1>Activos</h1>
             <table class="table">
@@ -105,8 +111,16 @@ window.onload = function(){
 
     getActivos();
 
+    $('#buscar').click(function(){
+        getActivos();
+    });
+
     function getActivos(){
-        axios.get('/api/activos')
+        axios.get('/api/activos', {
+            params: {
+                filtro: document.getElementById('filtro').value
+            }
+        })
         .then(function (response) {
             activos.innerHTML = '';
             response.data.forEach(activo => {

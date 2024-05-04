@@ -7,8 +7,13 @@ use App\Models\Baja;
 use Illuminate\Http\Request;
 
 class ActivoController extends Controller{
-    public function index(){
-        return Activo::orderBy('id','asc')->get();
+    public function index(Request $request){
+        $filtro = $request->input('filtro');
+        $filtro = Activo::where('nombre','ilike','%'.$filtro.'%')
+            ->orWhere('codigo','ilike','%'.$filtro.'%')
+            ->orderBy('id','asc')
+            ->get();
+        return $filtro;
     }
     public function store(Request $request){
         return Activo::create($request->all());
