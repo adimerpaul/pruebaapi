@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateActivosTable extends Migration
+class CreateBajasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateActivosTable extends Migration
      */
     public function up()
     {
-        Schema::create('activos', function (Blueprint $table) {
+        Schema::create('bajas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('codigo');
-            $table->string('descripcion');
-            $table->integer('cantidad_inicial');
+            $table->integer('cantidad');
+            $table->unsignedBigInteger('activo_id');
+            $table->foreign('activo_id')->references('id')->on('activos');
+            $table->string('motivo');
+            $table->date('fecha');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateActivosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('activos');
+        Schema::dropIfExists('bajas');
     }
 }
