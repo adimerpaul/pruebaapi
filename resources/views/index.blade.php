@@ -27,7 +27,7 @@
             </table>
         </div>
     </div>
-    <!-- Modal -->
+
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -64,6 +64,34 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Activo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre">
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripcion</label>
+                            <input type="text" class="form-control" id="descripcion">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="editar">Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -91,6 +119,7 @@ window.onload = function(){
                         <td>${activo.stock}</td>
                         <td>
                             <button type="button" class="btn btn-danger" data-id="${activo.id}" data-toggle="modal" data-target="#exampleModal">Dar baja</button>
+                            <button type="button" class="btn btn-primary" data-id="${activo.id}" data-nombre="${activo.nombre}" data-descripcion="${activo.descripcion}" data-toggle="modal" data-target="#modalEditar">Editar</button>
                         </td>
                     </tr>
                 `;
@@ -104,10 +133,16 @@ window.onload = function(){
     $('#exampleModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         activoId = button.data('id');
-        console.log(activoId);
+    });
+    $('#modalEditar').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        activoId = button.data('id');
+        var nombre = button.data('nombre');
+        var descripcion = button.data('descripcion');
+        document.getElementById('nombre').value = nombre;
+        document.getElementById('descripcion').value = descripcion;
     });
     $('#darBaja').click(function(){
-
         var cantidad = document.getElementById('cantidad').value;
         var motivo = document.getElementById('motivo').value;
         var fecha = document.getElementById('fecha').value;
@@ -123,6 +158,27 @@ window.onload = function(){
         })
         .catch(function (error) {
             console.log(error);
+        });
+    });
+    $('#editar').click(function(){
+        var nombre = document.getElementById('nombre').value;
+        var descripcion = document.getElementById('descripcion').value;
+
+        if(nombre == '' || descripcion == ''){
+            alert('Todos los campos son requeridos');
+            return false;
+        }
+
+        axios.put('/api/activos/'+activoId, {
+            nombre: nombre,
+            descripcion: descripcion
+        })
+        .then(function (response) {
+            getActivos();
+            $('#modalEditar').modal('hide');
+        })
+        .catch(function (error) {
+            alert(error.response.data.message)
         });
     });
 }

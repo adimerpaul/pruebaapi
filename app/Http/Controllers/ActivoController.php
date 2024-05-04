@@ -13,6 +13,18 @@ class ActivoController extends Controller{
     public function store(Request $request){
         return Activo::create($request->all());
     }
+    public function update(Request $request, $id){
+        $validatedData = $request->validate([
+            'nombre' => 'required',
+            'descripcion' => 'required'
+        ]);
+
+        $activo = Activo::find($id);
+        $activo->nombre = $request->nombre;
+        $activo->descripcion = $request->descripcion;
+        $activo->save();
+        return $activo;
+    }
     public function darBaja(Request $request){
         $baja = new Baja();
         $baja->cantidad = $request->cantidad;

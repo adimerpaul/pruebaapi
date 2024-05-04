@@ -20,4 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::get('activos',[ActivoController::class,'index']);
 Route::post('activos',[ActivoController::class,'store']);
+Route::put('activos/{id}',[ActivoController::class,'update']);
 Route::post('darBaja',[ActivoController::class,'darBaja']);
